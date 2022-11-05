@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MS-Login-Page</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        /* img{
+            max-width: 100vh;
+            max-height: 100vh;
+        } */
+        body{
+            background-image: url('login.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+        }
+        .maincontainer{
+            position: fixed;
+            left: 28rem;
+            top: 5rem;
+            width: 70rem;
+            height: 50rem;
+            background-color: whitesmoke;
+            /* opacity: 0.9; */
+            border-radius: 5px;
+        }
+        .logo{
+            position: fixed;
+            right: 24rem;
+            top: 7rem;
+        }
+        .slideimg{
+            position: fixed;
+            left: 28.rem;
+            border-radius: 5px;
+            height: 50rem;
+            width: 40rem;
+        }
+
+        button { 
+            background-color: lightseagreen; 
+            width: 20rem;
+            color: black; 
+            padding: 15px; 
+            margin: 10px 0px; 
+            border: none; 
+            cursor: pointer; 
+        } 
+        
+        form{ 
+            border:none; 
+            position: fixed;
+        } 
+ 
+        input[type=text], input[type=password] { 
+            width: 20rem; 
+            margin: 8px 0;
+            padding: 12px 20px; 
+            display: inline-block; 
+            border: 2px solid green; 
+            box-sizing: border-box; 
+        }
+        
+        button:hover { 
+            opacity: 0.7; 
+        } 
+        /* .cancelbtn { 
+            width: auto; 
+            padding: 10px 18px;
+            margin: 10px 5px;
+        }  */
+
+        .container { 
+            width: 20rem;
+            height: 30rem;
+            padding: 35px; 
+            background-color: lightblue;
+            position: fixed;
+            right: 24rem;
+            top: 15rem;
+        } 
+    </style>
+</head>
+<body>
+    <div class="maincontainer">
+        <img src="pliadesneo.jpg" alt="Nothing" class="slideimg">
+        <img src="Micronet-removebg.png" alt="Nothing" width="400px" class="logo">
+
+        <form>  
+            <div class="container">   
+                <label>Username  </label>   <br>
+                <input type="text" placeholder="Enter Username" name="username" required>  <br>
+                <label>Password  </label>   <br>
+                <input type="password" placeholder="Enter Password" name="password" required>  <br> <br>
+                <input type="checkbox" checked="checked"> Remember me &nbsp &nbsp &nbsp &nbsp  &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+                Forgot <a href="#"> password? </a> <br> <br>
+                <button type="submit">Login</button>   <br>
+                   
+                   
+            </div>   
+        </form>    
+    </div>
+     
+</body>
+</html>

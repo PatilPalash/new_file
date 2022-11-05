@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micronet Soluation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,900;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script> -->
+
+    
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            font-family: 'Poppins', sans-serif;
+        }
+        /* about map */
+        #map { 
+            height: 100vh; 
+            z-index: 0;
+        }
+
+        /* attribution control */
+        .leaflet-control-attribution{ 
+            position: fixed;
+            left: 0.5rem;
+            bottom: 0.25rem;
+        }
+
+        /* map zoom control */
+        .leaflet-control-zoom{
+            position: fixed;
+            bottom: 2rem;
+            right: 0.2rem;
+        }
+
+        /* map layer control */
+        .leaflet-control-layers{
+            position: fixed;
+            top: 0;
+            right: 0;
+        }
+
+        /* on map corrdinates lat and long */
+        .coordinate{
+            display: inline-block;
+            background-color: aliceblue;
+            color: black;
+            position: fixed;
+            bottom: 0.25rem;
+            right: 8rem;
+            z-index: 10000;
+        }
+        
+        /* left side slider panel */
+        /* .sidepanel  {
+            display: inline-block;
+            max-width: 0;
+            position: fixed;
+            z-index: 500;
+            height: 250px;
+            top: 0.5rem;
+            left: 0.5rem;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidepanel a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidepanel a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidepanel .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+        }
+
+        .openbtn {
+            z-index: 500;
+            position:fixed;
+            top: 0.5rem;
+            left: 0.5rem;
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #111;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+        }
+
+        .openbtn:hover {
+            background-color:#444;
+        } */
+        .sidepanel  {
+            display: inline-block;
+            width: 0;
+            position: fixed;
+            z-index: 500;
+            height: 550px;
+            top: 0.5rem;
+            left: 0.5rem;
+            background-color: #101119;
+            overflow-x: hidden;
+            /* transition: 0.5s; */
+            padding-top: 60px;
+        }
+
+        /* .sidepanel a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidepanel a:hover {
+            color: #f1f1f1;
+        } */
+
+        .sidepanel .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            text-decoration: none;
+            color: #818181;
+        }
+        .closebtn:hover{
+            color: #f1f1f1;
+        }
+
+        .openbtn {
+            z-index: 500;
+            position:fixed;
+            top: 0.5rem;
+            left: 0.5rem;
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #111;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+        }
+
+        .openbtn:hover {
+            background-color:#444;
+        }
+
+
+
+        /* right side search input field  */
+        #autocomplete {
+            /* z-index: 100;
+            margin-bottom: 5px; */
+            position: fixed;
+            top: 0.8rem;
+            right: 11.5rem;
+            padding: 14px;
+            border: none;
+        }
+
+        #search{
+            z-index: 500;
+            position: fixed;
+            right: 8.4rem;
+            top: 0.8rem;
+            /* top: 7.5rem;
+            right: 7.4em; */
+            /* display: inline-block; */
+        }
+
+        /* right side search button */
+        #SearchButton{
+            z-index: 500;
+            font-size: 20px;
+            background-color: whitesmoke;
+            border: none; 
+            padding: 11px;
+            cursor: pointer;
+        }
+        .ui-widget{
+            z-index: 500;
+            display:inline-block;
+        }
+
+        /* right side shape files buttom with on click popup */
+        .shapefilelayer {
+            z-index: 500;
+            position: fixed;
+            right: 3.6rem;
+            top: 4.6rem;
+            max-width: 80px;
+            height: 50px;
+            padding: 10px;
+            background-color: whitesmoke;
+        }
+        .shapefilelayer a{
+            text-decoration: none;
+            color: #111;
+        }
+        .shapefilebtn{
+            cursor: pointer;
+            z-index: 500;
+            position: fixed;
+            right: 0.7rem;
+            top: 4.5rem;
+            padding: 9px;
+        }
+
+        /* right side shape upload and poly drawn button */
+        /* .areaofintrest{
+            cursor: pointer;
+            z-index: 500;
+            position: fixed;
+            right: 0.7rem;
+            top: 12.2rem;
+            padding: 10px;
+        }
+        .areafuncpopup {
+            z-index: 500;
+            position: fixed;
+            right: 3.6rem;
+            top: 8rem;
+            max-width: 80px;
+            max-height: 21px;
+            padding: 10px;
+            background-color: whitesmoke;
+        } */
+
+
+        /* right side getposition marker */
+        /* .makepointofintrest{
+            cursor: pointer;
+            z-index: 500;
+            position: fixed;
+            right: 0.7rem;
+            top: 11.5rem;
+            padding: 10px 10px 10px 13px;
+        } */
+
+        /* right side getposition scale  */
+        /* .mesure{
+            cursor: pointer;
+            z-index: 500;
+            position: fixed;
+            right: 0.7rem;
+            top: 15rem;
+            padding: 9px;
+        } */
+
+        /* right side download img */
+        .downloadimg{
+            cursor: pointer;
+            z-index: 500;
+            position: fixed;
+            right: 0.7rem;
+            top: 8rem;
+            padding: 10px;
+        }
+        .fa-solid{
+            font-size: 20px;
+        }
+        .fa-sharp{
+            font-size: 28px;
+        }
+        .loginbtn{
+            cursor: pointer;
+            z-index: 500;
+            position: fixed;
+            top: 0.8rem;
+            right: 4.5rem;
+            padding: 11px;
+            background-color: whitesmoke;
+            border: none;
+        }
+
+        /* popup  */
+        #blackout {
+        z-index: 500;
+        background: rgba(102, 102, 102, 0.5);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: none;
+      }
+      #box {
+        z-index: 500;
+        max-width: 35rem;
+        max-height: 23rem;
+        text-align: center;
+        padding: 15px;
+        border: 3px solid #0000cc;
+        border-radius: 10px;
+        color: #0000cc;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        margin: auto;
+        background: #fff;
+      }
+      #blackout:target {display: block;}
+      .close {
+        position: fixed;
+        right: 42rem;
+        top: 18rem;
+        z-index: 500;
+        display: inline-block;
+        color: #0000cc;
+        padding: 0 12px;
+        margin: 10px;
+        text-decoration: none;
+        font-size: 20px;
+        cursor:pointer;
+      }
+      .close:hover {color: lightskyblue;}
+
+    /* uploadfilebutton */
+    .upload-btn-wrapper{
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .upload-file{
+        border:2px dashed #eee;
+        color:#9b9b9b;
+        background-color: white;
+        width:300px;
+        height:200px;
+        border-radius: 8px;
+        font-size:15px;
+        cursor: pointer;
+    }
+    .upload-btn-wrapper input[type=file]{
+        width:100%;
+        position: absolute;
+        left:0;
+        right:0;
+        top:0;
+        opacity: 0;
+        cursor: pointer;
+        min-height: 300px;
+    }
+    .success{
+        display:none;
+    }
+    .success i{
+        font-size:22px;
+        margin-left:6px;
+        margin-top:10px;
+        color:#00b665;
+    }
+    .font-50{
+        font-size:50px;
+    }
+    
+    .d-block{
+        display: block;
+    }
+    .btn .upload-file{
+        font-size:13px;
+    }
+    .upload-btn{
+        display: block;
+        font-size:18px;
+        color:#0000cc;
+    }
+    .leaflet-draw{
+        position: fixed;
+        right: 0.5rem;
+        /* top: 7.3rem; */
+        top: 11.5rem;
+        
+    }
+    .leaflet-draw-action{
+        position: fixed;
+        right: 20rem;
+    }
+
+    /* company logo  */
+    .companyname{
+        position: relative;
+        bottom: 55px;
+        left: 10px;
+        max-width: 10rem;
+        max-height: 5rem;
+        cursor: pointer;
+    }
+    .companyname:hover{
+        opacity: 0.5;
+    }
+
+    /* slider nav bar*/
+    .navbarslider {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333;
+        position: relative;
+        bottom: 40px;
+
+    }
+
+    .navbaritems {
+        float: left;
+    }
+
+    .navbaritems a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 15px;
+    }
+
+    .navbaritems a:hover {
+        background-color: #111;
+    }
+
+     /* Theme Para or div  */
+     .themeclass{
+        display: inline-block;
+        position: relative;
+        bottom: 30px;
+        left: 20px;
+    }
+    .themename{
+        display: inline-block;
+        font-size: 20px;
+        color: white;
+    }
+    .settinggear{
+        text-decoration: none;
+    }
+    .loginpara{
+        color: white;
+    }
+
+    /* icons size */
+    #searchicon{
+        font-size: 15px;
+    }
+    
+    #pen{
+        font-size: 15px;
+    }
+
+    #compare{
+        font-size: 15px;
+    }
+
+    #pin{
+        font-size: 15px;
+    }
+
+    #settinggear{
+        font-size: 20px;
+    }
+
+    /* dropdownlist */
+    #cars{
+        position: relative;
+        bottom: 20px;
+        left: 19px;
+        width: 26rem;
+        height: 25px;
+        background-color: #333;
+        color: #cdd5e3;
+        border: none;
+        font-size: 15px;
+    }
+    
+    .optionvalue{
+        color: #cdd5e3;
+        font-size: 15px;
+    }
+
+    /* under nanvbar */
+    .undernavbarul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333;
+        /* position: relative;
+        bottom: 40px; */
+    }
+
+    .undernavbar {
+        float: left;
+    }
+
+    .undernavbar a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 15px;
+    }
+
+    .undernavbar a:hover {
+        background-color: #111;
+    }
+
+    /* data source */
+    .datasourcebox{
+        position: relative;
+        left: 15px;
+    }
+    .hedingdata{
+        color: white;
+    }
+   
+    .datasource{
+        color: white;
+        font-size: 15px;
+    }
+
+    /* buttom block */
+    .buttombox{
+        background-color: black;
+        height: 100px;
+        position: relative;
+        top: 72px;
+    }
+    .buttomimg{
+        float: right;
+        position: relative;
+        top: 40px;
+        right: 10px;
+        width: 50px;
+    }
+    .buttomimg:hover{
+        opacity: 0.5;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+    
+    <div id="map">
+        <div class="ui-widget" style="text-align:left;" id="search">
+            <input id="autocomplete" placeholder="Search for: State">
+            <i class="fa fa-search" aria-hidden="true" id="SearchButton"></i>  
+        </div>
+
+        <div class="rightside">
+            <button class="shapefilebtn" id="shapefilebtn"><i class="fa-solid fa-layer-group"></i></button>
+            <div class="shapefilelayer" id="shapefilelayer">
+               <a href="districts.html">Districts</a>
+               <a href="tehsil.html">Tehsil</a>
+            </div>
+            <a href="loginpage.html" target="_blank"><button class="loginbtn"><i class="fa-solid fa-circle-user"></i></button></a>
+            <!-- <button class="areaofintrest" id="areaofintrest" ><i class="fa-solid fa-pen-ruler"></i></button> -->
+            <div class="areafuncpopup" id="areafuncpopup">
+                <i class="fa-solid fa-download"></i>
+                <a href="#blackout"><i class="fa-solid fa-upload"></i></a>
+            </div>
+            <!-- <button class="makepointofintrest" id="makepointofintrest" ><i class="fa-solid fa-location-dot"></i></button>
+            <button class="mesure" id="mesure" ><i class="fa-solid fa-ruler"></i></button> -->
+            <button class="downloadimg" id="downloadimg" ><i class="fa-sharp fa-solid fa-file-arrow-down"></i></button>
+        </div>
+        <div class="coordinate"></div>
+
+        <!-- Side Panel -->
+        <button class="openbtn" id="openbtn" onclick="openNav()">☰</button>
+        <div id="mySidepanel" class="sidepanel">
+            <div style="display: inline-block;">
+                <a href="https://www.micronetsolutions.in/#" target="_blank"><img src="Capture-removebg-preview.png" alt="Nothing" class="companyname"></a>
+                <a href="javascript:void(0)" id="closebtn" class="closebtn" onclick="closeNav()">×</a>
+            </div>
+            <div>
+                <ul class="navbarslider">
+                    <li class="navbaritems"><a class="active" href="#home"><i class="fa-sharp fa-solid fa-magnifying-glass" id="searchicon"></i>&nbsp Discover</a></li>
+                    <li class="navbaritems"><a href="#news"><i class="fa-solid fa-pen-fancy" id="pen"></i>&nbsp Visualize</a></li>
+                    <li class="navbaritems"><a href="#contact"><i class="fa-solid fa-arrow-right-arrow-left" id="compare"></i>&nbsp Compare</a></li>
+                    <li class="navbaritems"><a href="#about"><i class="fa-solid fa-thumbtack" id="pin"></i>&nbsp Pin</a></li> 
+                </ul>
+                <div class="themeclass">
+                    <p class="themename">Theme</p><a href="loginpage.html" class="settinggear">&nbsp &nbsp<i class="fa-solid fa-gear" id="settinggear"></i></a>
+                    <p class="loginpara">Login to use custom configuration instances.</p>
+                </div>
+
+                <div class="dropdown">
+                    <select name="cars" id="cars">
+                        <option value="selection">Default</option>
+                        <option value="Agriculture" class="optionvalue">Agriculture</option>
+                        <option value="Defence" class="optionvalue">Defence & Security</option>
+                        <option value="Forestry" class="optionvalue">Forestry</option>
+                        <option value="Water" class="optionvalue">Water Resource</option>
+                        <option value="Mining" class="optionvalue">Mining & Mineral Resource Mapping</option>
+                        <option value="Mapping" class="optionvalue">Mapping & Land Administarion</option>
+                        <option value="Urban" class="optionvalue">Urban Development & Infrastructure</option>
+                        <option value="Oil" class="optionvalue">Oil And Gas</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <ul class="undernavbarul">
+                    <li class="undernavbar"><a class="active" href="#home">&nbsp Search</a></li>
+                    <li class="undernavbar"><a href="#news">&nbsp Commercial Data</a></li>
+                    <li class="undernavbar"><a href="#contact">&nbsp Highlight</a></li>
+                </ul>
+            </div><br>
+            <div class="datasourcebox">
+                <h2 class="hedingdata">Data Sources</h2><br>
+                <div class="datasource"> 
+                    <input type="checkbox" class="inputoption">&nbsp &nbsp Pleiades<br>
+                    <input type="checkbox" class="inputoption">&nbsp &nbsp Pleiades Neo<br>
+                    <input type="checkbox" class="inputoption">&nbsp &nbsp Planet BaseMap<br>
+                    <input type="checkbox" class="inputoption">&nbsp &nbsp Radarsat<br>
+                </div>
+            </div>
+            <div class="buttombox"> 
+                <a href="https://www.micronetsolutions.in/#" target="_blank"><img src="logo.jpg" alt="Nothing" class="buttomimg"></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- popup uploadfile -->
+    <div id="blackout">
+        <div id="box">
+            <p>File upload</p><br>
+        <a href="#" class="close"><i class="fa-solid fa-xmark"></i></a>
+        <p>GEOJSON/JSON file to create area of interest. <br> Area will be used for clipping when exporting an image. <br><br></p>
+        <div class="file-wrapper">
+            <div class="upload-btn-wrapper">
+                <button class="btn upload-file font-weight-500">
+                    <span class="upload-btn">
+                      <i class="fas fa-cloud-upload-alt d-block font-50 pb-2"></i>
+                      Browse folders here
+                    </span>
+                    <span class="upload-select-button" id="blankFile">
+                        Upload a KML/KMZ, ShapeFile (in EPSG:4326)
+                    </span>
+                    <span class="success">
+                      <i class="far fa-check-circle text-success"></i>
+                    </span>
+                </button>
+                <input type="file" name="selectfile" id="selectfile">
+            </div>
+        </div>
+    </div>
+    </div>
+   
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> -->
+    <script>
+
+        
+        //Toggle Slider Bar
+        function openNav() {
+            document.getElementById("mySidepanel").style.width = "450px";
+        }
+        $(".openbtn").click(function(){
+            $("#openbtn").hide();
+        });
+        $(".closebtn").click(function(){
+           $("#openbtn").show();
+        });
+        function closeNav() {
+            document.getElementById("mySidepanel").style.width = "0";
+        }
+
+       
+
+        
+
+        
+
+
+        var url = 'output.json';  // my GeoJSON data source, in this case a static file not a live PHP data feed.
+        var arr = [];
+        var arr1 = [];
+
+        // Initialize autocomplete with empty source.
+        $("#autocomplete").autocomplete();
+
+
+        var map = L.map('map').setView([20.5937, 78.9629], 5.4);
+        map.zoomControl.setPosition('bottomright');
+        
+        var osm = new L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        // attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        
+        });
+        
+        // BaseMap WorldImagery
+        var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        }).addTo(map);
+
+        // WorldTopoMap
+        var Esri_WorldTopoMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+        });
+
+        // OceanBaseMap
+        var Esri_OceanBasemap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}', {
+	        maxZoom: 13
+        });
+
+        // NatGeographicMap
+        var Esri_NatGeoWorldMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
+	        maxZoom: 16
+        });
+    
+        
+
+
+        // Set style function that sets fill color property
+        function style(feature) {
+                return {
+                    fillColor: 'blue',
+                    fillOpacity: 0.5,
+                    weight: 2,
+                    opacity: 1,
+                    color: '#ffffff',
+                    dashArray: '3'
+                };
+            }
+            var highlight = {
+                'fillColor': 'yellow',
+                'weight': 2,
+                'opacity': 1
+            };
+
+
+            function forEachFeature(feature, layer) {
+                // Tagging each state poly with their name for the search control.
+                layer._leaflet_id = feature.properties.STATE_NAME;
+
+                var popupContent = "<p><b>STATE: </b>" + feature.properties.STATE_NAME +
+                    "</br>REGION: " + feature.properties.SUB_REGION +
+                    "</br>STATE ABBR: " + feature.properties.STATE_ABBR +
+                    // "</br>POP2010: "+ feature.properties.POP2010.toLocaleString() +
+                    // "</br>Pop 2010 per SQMI: "+ feature.properties.POP10_SQMI.toLocaleString() +
+                    // "</br>Males: "+ feature.properties.MALES.toLocaleString() +
+                    // "</br>Females: "+ feature.properties.FEMALES.toLocaleString() +
+                    // "</br>SQ Miles: "+ feature.properties.SQMI.toLocaleString() +
+                    '</p>';
+
+                layer.bindPopup(popupContent);
+
+                layer.on("click", function (e) {
+                    stateLayer.setStyle(style); //resets layer colors
+                    layer.setStyle(highlight);  //highlights selected.
+                });
+            }
+            
+           
+
+
+            // Null variable that will hold layer
+            var stateLayer = L.geoJson(null, { onEachFeature: forEachFeature, style: style });
+
+            $.getJSON(url, function (data) {
+                stateLayer.addData(data);
+
+                for (i = 0; i < data.features.length; i++) {  //loads State Name into an Array for searching
+                    arr1.push({ label: data.features[i].properties.STATE_NAME, value: "" });
+                }
+                addDataToAutocomplete(arr1);  //passes array for sorting and to load search control.
+            });
+
+            stateLayer.addTo(map);
+            console.log(stateLayer)
+
+            
+           
+           
+           
+            ////////// Autocomplete search
+            function addDataToAutocomplete(arr) {
+
+                arr.sort(function (a, b) { // sort object by Name
+                    var nameA = a.label, nameB = b.label
+                    if (nameA < nameB) //sort string ascending
+                        return -1
+                    if (nameA > nameB)
+                        return 1
+                    return 0 //default return value (no sorting)
+                })
+
+                // The source for autocomplete.  https://api.jqueryui.com/autocomplete/#method-option
+                $("#autocomplete").autocomplete("option", "source", arr);
+
+                $("#autocomplete").on("autocompleteselect", function (event, ui) {
+                    polySelect(ui.item.label);  //grabs selected state name
+
+                    ui.item.value = '';
+                });
+            }	///////////// Autocomplete search end
+
+
+            // fire off click event and zoom to polygon  
+            function polySelect(a) {
+                map._layers[a].fire("click");  // 'clicks' on state name from search
+                var layer = map._layers[a];
+                map.fitBounds(layer.getBounds());  // zooms to selected poly
+            }
+
+           
+            // END...fire off click event and zoom to polygon
+        
+
+        var baseMaps = {
+                "Open Street Map": osm,
+                "WorldImagery":Esri_WorldImagery,
+                "WorldTopoMap":Esri_WorldTopoMap,
+                "OceanBaseMap":Esri_OceanBasemap,
+                "NatGeoWorldMap":Esri_NatGeoWorldMap,
+            };
+
+        // Add layer control
+        L.control.layers(baseMaps).addTo(map);
+
+        // Add Map Scale
+        L.control.scale({
+            metric: true,
+            imperial: false,
+            position: 'bottomright'}).addTo(map);
+
+        
+
+        // Map Coordinates Display (lat and long)
+        map.on('mousemove', function (e) {
+            console.log(e)
+            $('.coordinate').html(`Lat: ${e.latlng.lat.toFixed(2)} Lng: ${e.latlng.lng.toFixed(2)}`)
+        })
+
+
+        //shapefile download/upload buttom
+        $('#shapefilelayer').hide();
+        $('#shapefilebtn').on('click', function(){
+        $('#shapefilelayer').toggle('display: inline-block');
+        });
+
+        //toolbar button
+        // $('.leaflet-draw').hide();
+        // $('#areaofintrest').on('click', function(){
+        // $('.leaflet-draw').toggle('display: inline-block');
+        // });
+
+        // Search Bar & Toggle
+        $('#autocomplete').hide();
+        $('#SearchButton').on('click', function(){
+        $('#autocomplete').toggle('display: inline-block');
+        });
+
+
+        //areaupload buttom
+        $('#areafuncpopup').hide();
+        $('#downloadimg').on('click', function(){
+        $('#areafuncpopup').toggle('display: inline-block');
+        });
+        
+
+        
+
+        // uploadfile
+        $("#selectfile").bind('change',function(){
+        var filename = $("#selectfile").val();
+        if(/^s*$/.test(filename)){
+        $("#blankFile").text("No File Chosen..");
+        $(".success").hide();
+            }else{
+        $("#blankFile").text(filename.replace("C:\\fakepath\\",""));
+        $(".success").show();
+            }
+        }) 
+
+
+        // FeatureGroup is to store editable layers
+        // var drawnItems = new L.FeatureGroup();
+        //     map.addLayer(drawnItems);
+        // var drawControl = new L.Control.Draw({
+          
+        //     edit: {
+        //         featureGroup: drawnItems
+        //     }
+            
+        // });
+        
+        // map.addControl(drawControl);
+        var editableLayers = new L.FeatureGroup();
+        map.addLayer(editableLayers);
+    
+    var MyCustomMarker = L.Icon.extend({
+        options: {
+            shadowUrl: null,
+            iconAnchor: new L.Point(12, 12),
+            iconSize: new L.Point(24, 24),
+            iconUrl: 'link/to/image.png'
+        }
+    });
+    
+    var options = {
+        position: 'topright',
+        draw: {
+            polyline: {
+                shapeOptions: {
+                    color: '#f357a1',
+                    weight: 10
+                }
+            },
+            polygon: {
+                allowIntersection: false, // Restricts shapes to simple polygons
+                drawError: {
+                    color: '#e1e100', // Color the shape will turn when intersects
+                    message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
+                },
+                shapeOptions: {
+                    color: '#bada55'
+                }
+            },
+            circle: false, // Turns off this drawing tool
+            rectangle: {
+                shapeOptions: {
+                    clickable: false
+                }
+            },
+            marker: {
+                icon: new MyCustomMarker()
+            }
+        },
+        edit: {
+            featureGroup: editableLayers, //REQUIRED!!
+            remove: false
+        }
+    };
+    
+    var drawControl = new L.Control.Draw(options);
+    map.addControl(drawControl);
+    
+    map.on(L.Draw.Event.CREATED, function (e) {
+        var type = e.layerType,
+            layer = e.layer;
+    
+        if (type === 'marker') {
+            layer.bindPopup('A popup!');
+        }
+    
+        editableLayers.addLayer(layer);
+    });
+    </script>
+</body>
+</html>

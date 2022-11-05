@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micronet Soluation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #map { 
+            height: 100vh; 
+            z-index: 0;
+        }
+        .leaflet-control-attribution{ 
+            position: fixed;
+            left: 0.5rem;
+            bottom: 0.25rem;
+        }
+        .leaflet-control-zoom{
+            position: fixed;
+            bottom: 2rem;
+            right: 0.2rem;
+        }
+        .leaflet-control-layers{
+            position: fixed;
+            top: 0;
+            right: 0;
+        }
+        .coordinate{
+            display: inline-block;
+            background-color: aliceblue;
+            color: black;
+            position: fixed;
+            bottom: 0.25rem;
+            right: 8rem;
+            z-index: 10000;
+        }
+        
+        .sidepanel  {
+            display: inline-block;
+            width: 0;
+            position: fixed;
+            z-index: 500;
+            height: 250px;
+            top: 0.5rem;
+            left: 0.5rem;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidepanel a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidepanel a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidepanel .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+        }
+
+        .openbtn {
+            z-index: 500;
+            position:fixed;
+            top: 0.5rem;
+            left: 0.5rem;
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #111;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+        }
+
+        .openbtn:hover {
+            background-color:#444;
+        }
+
+        #autocomplete {
+            /* z-index: 100;
+            margin-bottom: 5px; */
+            position: fixed;
+            top: 0.8rem;
+            right: 8rem;
+            padding: 14px;
+            border: none;
+        }
+        #search{
+            z-index: 500;
+            position: fixed;
+            right: 5rem;
+            top: 0.8rem;
+            /* top: 7.5rem;
+            right: 7.4em; */
+            /* display: inline-block; */
+        }
+        #SearchButton{
+            z-index: 500;
+            font-size: 20px;
+            background-color: #fff;
+            border: none; 
+            padding: 11px;
+            cursor: pointer;
+        }
+        .ui-widget{
+            z-index: 500;
+            display:inline-block;
+        }
+        .shapefilelayer {
+            z-index: 500;
+            position: fixed;
+            right: 3.6rem;
+            top: 4.6rem;
+            width: 80px;
+            height: 50px;
+            padding: 10px;
+            background-color: whitesmoke;
+        }
+        .shapefilelayer a{
+            text-decoration: none;
+            color: #111;
+        }
+        .shapefilebtn{
+            z-index: 500;
+            position: fixed;
+            right: 0.7rem;
+            top: 4.5rem;
+            padding: 9px;
+        }
+        .fa-solid{
+            font-size: 20px;
+        }
+</style>
+</head>
+<body>
+    
+    <div id="map">
+        <div class="ui-widget" style="text-align:left;" id="search">
+            <input id="autocomplete" placeholder="Search for: State">
+            <i class="fa fa-search" aria-hidden="true" id="SearchButton"></i>  
+        </div>
+
+        <div class="rightside">
+            <button class="shapefilebtn" id="shapefilebtn" onclick="btnfunction()"><i class="fa-solid fa-layer-group"></i></button>
+            <div class="shapefilelayer" id="shapefilelayer">
+                <a href="districts.html">Districts</a>
+                <a href="tahesil.html">Tahesil</a>
+            </div>
+        </div>
+        <div class="coordinate"></div>
+
+        <div id="mySidepanel" class="sidepanel">
+            <a href="javascript:void(0)" id="closebtn" class="closebtn" onclick="closeNav()">×</a>
+        </div>
+        <button class="openbtn" id="openbtn" onclick="openNav()">☰</button>
+    </div>
+   
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> -->
+    <script>
+        //Toggle Slider Bar
+        function openNav() {
+            document.getElementById("mySidepanel").style.width = "500px";
+        }
+        $(".openbtn").click(function(){
+            $("#openbtn").hide();
+        });
+        $(".closebtn").click(function(){
+           $("#openbtn").show();
+        });
+        function closeNav() {
+            document.getElementById("mySidepanel").style.width = "0";
+        }
+
+        //shapefile buttom
+        $('#shapefilelayer').hide();
+        $('#shapefilebtn').on('click', function(){
+        $('#shapefilelayer').toggle('display: inline-block');
+        });
+
+
+        // Search Bar & Toggle
+        $('#autocomplete').hide();
+        $('#SearchButton').on('click', function(){
+        $('#autocomplete').toggle('display: inline-block');
+        });
+
+        var url = 'Districts.json';  // my GeoJSON data source, in this case a static file not a live PHP data feed.
+        var arr = [];
+        var arr1 = [];
+
+        // Initialize autocomplete with empty source.
+        $("#autocomplete").autocomplete();
+
+
+        var map = L.map('map').setView([20.5937, 78.9629], 5.4);
+        map.zoomControl.setPosition('bottomright');
+        
+        var osm = new L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        // attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        
+        });
+        
+        // BaseMap WorldImagery
+        var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        }).addTo(map);
+
+        // WorldTopoMap
+        var Esri_WorldTopoMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+        });
+
+        // OceanBaseMap
+        var Esri_OceanBasemap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}', {
+	        maxZoom: 13
+        });
+
+        // NatGeographicMap
+        var Esri_NatGeoWorldMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
+	        maxZoom: 16
+        });
+    
+        // Set style function that sets fill color property
+        function style(feature) {
+                return {
+                    fillColor: 'blue',
+                    fillOpacity: 0.5,
+                    weight: 2,
+                    opacity: 1,
+                    color: '#ffffff',
+                    dashArray: '3'
+                };
+            }
+            var highlight = {
+                'fillColor': 'yellow',
+                'weight': 2,
+                'opacity': 1
+            };
+
+
+            function forEachFeature(feature, layer) {
+                // Tagging each state poly with their name for the search control.
+                layer._leaflet_id = feature.properties.DIST;
+
+                var popupContent = "<p><b>STATE: </b>" + feature.properties.STATE +
+                    "</br>REGION: " + feature.properties.DIST +
+                    // "</br>STATE ABBR: " + feature.properties.STATE_ABBR +
+                    // "</br>POP2010: "+ feature.properties.POP2010.toLocaleString() +
+                    // "</br>Pop 2010 per SQMI: "+ feature.properties.POP10_SQMI.toLocaleString() +
+                    // "</br>Males: "+ feature.properties.MALES.toLocaleString() +
+                    // "</br>Females: "+ feature.properties.FEMALES.toLocaleString() +
+                    // "</br>SQ Miles: "+ feature.properties.SQMI.toLocaleString() +
+                    '</p>';
+
+                layer.bindPopup(popupContent);
+
+                layer.on("click", function (e) {
+                    stateLayer.setStyle(style); //resets layer colors
+                    layer.setStyle(highlight);  //highlights selected.
+                });
+            }
+            
+           
+
+
+            // Null variable that will hold layer
+            var stateLayer = L.geoJson(null, { onEachFeature: forEachFeature, style: style });
+
+            $.getJSON(url, function (data) {
+                stateLayer.addData(data);
+
+                for (i = 0; i < data.features.length; i++) {  //loads State Name into an Array for searching
+                    arr1.push({ label: data.features[i].properties.DIST, value: "" });
+                }
+                addDataToAutocomplete(arr1);  //passes array for sorting and to load search control.
+            });
+
+            stateLayer.addTo(map);
+            console.log(stateLayer)
+
+            
+           
+           
+           
+            ////////// Autocomplete search
+            function addDataToAutocomplete(arr) {
+
+                arr.sort(function (a, b) { // sort object by Name
+                    var nameA = a.label, nameB = b.label
+                    if (nameA < nameB) //sort string ascending
+                        return -1
+                    if (nameA > nameB)
+                        return 1
+                    return 0 //default return value (no sorting)
+                })
+
+                // The source for autocomplete.  https://api.jqueryui.com/autocomplete/#method-option
+                $("#autocomplete").autocomplete("option", "source", arr);
+
+                $("#autocomplete").on("autocompleteselect", function (event, ui) {
+                    polySelect(ui.item.label);  //grabs selected state name
+
+                    ui.item.value = '';
+                });
+            }	///////////// Autocomplete search end
+
+
+            // fire off click event and zoom to polygon  
+            function polySelect(a) {
+                map._layers[a].fire("click");  // 'clicks' on state name from search
+                var layer = map._layers[a];
+                map.fitBounds(layer.getBounds());  // zooms to selected poly
+            }
+
+           
+            // END...fire off click event and zoom to polygon
+        
+
+        var baseMaps = {
+                "Open Street Map": osm,
+                "WorldImagery":Esri_WorldImagery,
+                "WorldTopoMap":Esri_WorldTopoMap,
+                "OceanBaseMap":Esri_OceanBasemap,
+                "NatGeoWorldMap":Esri_NatGeoWorldMap,
+            };
+
+            var overlayMaps = {
+                "Districts": stateLayer
+            };
+
+            //Add layer control
+            L.control.layers(baseMaps, overlayMaps).addTo(map);
+        // Add layer control
+        //L.control.layers(baseMaps).addTo(map);
+
+        // Add Map Scale
+        L.control.scale({
+            metric: true,
+            imperial: false,
+            position: 'bottomright'}).addTo(map);
+
+        
+
+        // Map Coordinates Display (lat and long)
+        map.on('mousemove', function (e) {
+            console.log(e)
+            $('.coordinate').html(`Lat: ${e.latlng.lat.toFixed(2)} Lng: ${e.latlng.lng.toFixed(2)}`)
+        })
+        
+    </script>
+</body>
+</html>
